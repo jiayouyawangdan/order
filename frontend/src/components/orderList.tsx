@@ -14,12 +14,11 @@ export const reducer = (
   props:
     | {
         type: 'input';
-        index?: number;
+        id?: number;
         desc?: string;
       }
     | {
         type: 'save';
-        index?: number;
         order?: API.OrderVO;
       }
     | {
@@ -28,7 +27,7 @@ export const reducer = (
       }
     | {
         type: 'edit' | 'cancel';
-        index?: number;
+        id?: number;
       }
     | {
         type: 'add';
@@ -39,15 +38,15 @@ export const reducer = (
     case 'init':
       return props.list;
     case 'edit':
-      return state.map((v, idx) => {
-        if (idx === props.index) {
+      return state.map((v) => {
+        if (v.id === props.id) {
           return { ...v, editable: true };
         }
         return v;
       });
     case 'cancel':
-      return state.map((v, idx) => {
-        if (idx === props.index) {
+      return state.map((v) => {
+        if (v.id === props.id) {
           return {
             ...v,
             desc: v.prevouseDesc || v.desc,
@@ -58,8 +57,8 @@ export const reducer = (
         return v;
       });
     case 'input':
-      return state.map((v, idx) => {
-        if (idx === props.index) {
+      return state.map((v) => {
+        if (v.id === props.id) {
           return {
             ...v,
             prevouseDesc: !v.prevouseDesc ? v.desc : v.prevouseDesc,
@@ -69,8 +68,8 @@ export const reducer = (
         return v;
       });
     case 'save':
-      return state.map((v, idx) => {
-        if (idx === props.index) {
+      return state.map((v) => {
+        if (v.id === props.order.id) {
           return { ...props.order, prevouseDesc: '', editable: false };
         }
         return v;
@@ -91,30 +90,30 @@ const OrderList = ({ orderName }: { orderName: string }) => {
   };
   const [orderList, dispatch] = useReducer(reducer, []);
 
-  const handleEditClick = (index: number) => dispatch({ type: 'edit', index });
+  const handleEditClick = (id: number) => dispatch({ type: 'edit', id });
 
-  const handleInput = (index: number, desc: string) =>
-    dispatch({ type: 'input', index, desc });
+  const handleInput = (id: number, desc: string) =>
+    dispatch({ type: 'input', id, desc });
 
-  const handleCancel = (index: number) => dispatch({ type: 'cancel', index });
+  const handleCancel = (id: number) => dispatch({ type: 'cancel', id });
 
-  const handleDeleteClick = async (index: number) => {
+  const handleDeleteClick = async (id: number) => {
     Modal.confirm({
       content: '确认删除该条订单？',
       onOk: async () => {
-        await services.deleteOrder(orderList[index]);
+        await services.deleteOrder(orderList.find((v) => v.id === id));
         init();
       },
     });
   };
 
-  const handleSaveClick = async (index: number, order: API.OrderVO) => {
+  const handleSaveClick = async (order: API.OrderVO) => {
     if (order.id) {
       await services.updateOrder(order);
     } else {
       await services.addOrder(order);
     }
-    dispatch({ type: 'save', order, index });
+    dispatch({ type: 'save', order });
   };
 
   const columns = [
@@ -132,13 +131,13 @@ const OrderList = ({ orderName }: { orderName: string }) => {
       title: '订单描述',
       dataIndex: 'desc',
       key: 'desc',
-      render: (_: any, order: API.OrderVO, index: number) => (
+      render: (_: API.OrderVO, order: API.OrderVO) => (
         <>
           {order.editable ? (
             <Input
               value={order.desc}
               onChange={(e: SyntheticEvent & { target: { value: string } }) =>
-                handleInput(index, e.target.value)
+                handleInput(order.id, e.target.value)
               }
             />
           ) : (
@@ -155,27 +154,30 @@ const OrderList = ({ orderName }: { orderName: string }) => {
     {
       title: '操作',
       key: 'action',
-      render: (_: API.OrderVO, order: API.OrderVO, index: number) => (
+      render: (_: API.OrderVO, order: API.OrderVO) => (
         <Space size="middle">
           {order.editable ? (
             <>
               <CheckCircleOutlined
                 title="保存"
-                onClick={() => handleSaveClick(index, order)}
+                onClick={() => handleSaveClick(order)}
               />
               <RedoOutlined
                 title="取消"
                 type="primary"
-                onClick={() => handleCancel(index)}
+                onClick={() => handleCancel(order.id)}
               />
             </>
           ) : (
-            <EditOutlined title="取消" onClick={() => handleEditClick(index)} />
+            <EditOutlined
+              title="取消"
+              onClick={() => handleEditClick(order.id)}
+            />
           )}
           <DeleteOutlined
             title="删除"
             color="red"
-            onClick={() => handleDeleteClick(index)}
+            onClick={() => handleDeleteClick(order.id)}
           />
         </Space>
       ),
