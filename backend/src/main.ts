@@ -1,10 +1,3 @@
-/*
- * @Date: 2023-12-30 10:49:03
- * @LastEditors: zhumanyao
- * @LastEditTime: 2024-01-05 16:56:37
- * @FilePath: \server-web\node-server\nestjs-server\src\main.ts
- */
-
 import { NestFactory } from '@nestjs/core'; // nestJs 的创建工厂
 import { AppModule } from './app.module'; // nestJs 的入口模块文件 类似于 vue 的 App.vue
 import { NestExpressApplication } from '@nestjs/platform-express';

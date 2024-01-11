@@ -25,7 +25,6 @@ const List2 = () => {
   const deferredValue = useDeferredValue(orderName);
   const handleInputChange = (e: { target: { value: string } }) =>
     setOrderName(e.target.value);
-
   return (
     <>
       <h1>后端分页</h1>
@@ -48,14 +47,12 @@ const List3 = () => {
     </>
   );
 };
-const App = () => {
-  return (
-    <>
-      {/* <List3 /> */}
-      <List2 />
-      <List1 />
-    </>
-  );
-};
+
+const App = () => (
+  <>
+    <List1 />
+    <List2 />
+  </>
+);
 
 export default App;

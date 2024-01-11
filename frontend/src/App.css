@@ -6,7 +6,7 @@
   margin-bottom: 20px;
 }
 .pagination-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  /* flex-direction: column; */
   row-gap: 20px;
 }
