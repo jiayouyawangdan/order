@@ -1,0 +1,7 @@
+.operation-bar {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 100px;
+  align-items: center;
+  margin-bottom: 20px;
+}
