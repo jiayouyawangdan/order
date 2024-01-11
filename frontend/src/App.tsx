@@ -51,7 +51,7 @@ const List3 = () => {
 const App = () => {
   return (
     <>
-      <List3 />
+      {/* <List3 /> */}
       <List2 />
       <List1 />
     </>
