@@ -130,7 +130,7 @@ const OrderList = ({ orderName }: { orderName: string }) => {
   );
 
   return (
-    <>
+    <section className="pagination-container">
       <Table
         rowKey="id"
         dataSource={dataSource}
@@ -144,7 +144,7 @@ const OrderList = ({ orderName }: { orderName: string }) => {
         current={pageNumber}
         onChange={setPageNumber}
       />
-    </>
+    </section>
   );
 };
 

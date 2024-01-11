@@ -1,4 +1,4 @@
-import { Table, Space, Input, Modal } from 'antd';
+import { Table, Space, Input, Modal, Button } from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
@@ -185,22 +185,26 @@ const OrderList = ({ orderName }: { orderName: string }) => {
   useEffect(() => {
     init();
   }, []);
-  // init data
-  // useEffect(() => {
-  //   const batchInsert = async () => {
-  //     for (let i = 0; i < 1000; i++) {
-  //       await services.addOrder({ desc: `${i}` });
-  //     }
-  //   };
-  //   batchInsert();
-  // }, []);
+
   const dataSource = useMemo(
     () => orderList.filter((v) => v.name.includes(orderName)),
     [orderList, orderName]
   );
-
+  const handleClick = async () => {
+    for (let i = 0; i < 10; i++) {
+      await services.addOrder({ desc: `${i}` });
+    }
+    init();
+  };
   return (
-    <Table rowKey="id" dataSource={dataSource} columns={columns} bordered />
+    <section className="pagination-container">
+      <div>
+        <Button type="primary" onClick={handleClick}>
+          生成 10 条新数据
+        </Button>
+      </div>
+      <Table rowKey="id" dataSource={dataSource} columns={columns} bordered />
+    </section>
   );
 };
 
